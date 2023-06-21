@@ -1,0 +1,31 @@
+/* Genéricas */
+body{
+  margin: 0;
+}
+ul.slide{
+  margin: 0;
+  list-style: none;
+}
+.slide-wrapper img{
+  display: block;
+  max-width: 100%;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* Essenciais */
+.slide-wrapper{
+  overflow: hidden;
+  cursor: grab;
+}
+.slide{
+  display: flex;
+  gap: 8rem;
+  width: max-content;
+  padding: 0;
+}
+.slide li{
+  flex-shrink: 0;
+  width: 80vw;
+  max-width: 800px;
+}
