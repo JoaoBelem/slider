@@ -14,15 +14,11 @@ export default class Slide {
   }
 
   mouseMove(e) {
-    // console.log(e.currentTarget);
-    // console.log(this.captureX);
-    // console.log(this.captureX + (e.clientX - this.oldClientX));
-
     if (!this.wrapper.contains(e.target)) {
       this.mouseUp();
     }
 
-    this.slide.style.transform = `translateX(${this.captureX + (e.clientX - this.oldClientX)}px)`;
+    this.slide.style.transform = `translateX(${this.captureX + (e.clientX - this.oldClientX) * 1.6}px)`;
   }
 
   mouseUp(e) {
@@ -33,10 +29,10 @@ export default class Slide {
   }
 
   mouseIn(e) {
+    console.log('down');
     e.preventDefault();
     this.wrapper.addEventListener('mouseup', this.mouseUp);
 
-    console.log('down');
     this.oldClientX = e.clientX;
 
     window.addEventListener('mousemove', this.mouseMove);
