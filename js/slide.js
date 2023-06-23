@@ -13,38 +13,55 @@ export default class Slide {
     this.init();
   }
 
+  // Movimento do mouse/toque
   mouseMove(e) {
     if (!this.wrapper.contains(e.target)) {
       this.mouseUp();
     }
 
-    this.slide.style.transform = `translateX(${this.captureX + (e.clientX - this.oldClientX) * 1.6}px)`;
+    const pointerX = (e.type === 'mousemove') ? e.clientX : e.changedTouches[0].clientX;
+
+    this.slide.style.transform = `translateX(${this.captureX + (pointerX - this.oldClientX) * 1.6}px)`;
   }
 
+  // Mouse/toque movido para fora ou finalizado.
   mouseUp(e) {
     console.log('up');
+
     window.removeEventListener('mousemove', this.mouseMove);
     this.wrapper.removeEventListener('mouseup', this.mouseUp);
-    this.wrapper.removeEventListener('mouseout', this.mouseOut, false);
+    
+    window.removeEventListener('touchmove', this.mouseMove);
+    this.wrapper.removeEventListener('touchend', this.mouseUp);
   }
 
+  // Mouse/toque executado.
   mouseIn(e) {
+    let moveType
+    if (e.type === 'mousedown') {
+      e.preventDefault();
+      this.oldClientX = e.clientX;
+      this.wrapper.addEventListener('mouseup', this.mouseUp);
+      moveType = 'mousemove'
+    } else {
+      this.oldClientX = e.changedTouches[0].clientX;
+      this.wrapper.addEventListener('touchend', this.mouseUp);
+      moveType = 'touchmove'
+    }
+
     console.log('down');
-    e.preventDefault();
-    this.wrapper.addEventListener('mouseup', this.mouseUp);
+    console.log(this.oldClientX);
 
-    this.oldClientX = e.clientX;
-
-    window.addEventListener('mousemove', this.mouseMove);
+    window.addEventListener(moveType, this.mouseMove);
 
     const oldTranslateX = this.slide.style.transform;
     this.captureX = +oldTranslateX.match(this.regex).groups.number;
   }
 
   init() {
-    console.log(this.slide);
-    this.wrapper.addEventListener('mousedown', this.mouseIn);
-
     this.slide.style.transform = 'translateX(0)';
+
+    this.wrapper.addEventListener('mousedown', this.mouseIn);
+    this.wrapper.addEventListener('touchstart', this.mouseIn);
   }
 }
