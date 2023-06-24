@@ -1,3 +1,5 @@
+import debounce from './debounce.js';
+
 export default class Slide {
   constructor(slide, wrapper) {
     this.slide = document.querySelector(slide);
@@ -6,9 +8,10 @@ export default class Slide {
     this.mouseIn = this.mouseIn.bind(this);
     this.mouseUp = this.mouseUp.bind(this);
     this.mouseMove = this.mouseMove.bind(this);
-
+    this.onResize = debounce(this.onResize.bind(this), 200);
+    
     this.regex = /(?:(?<number>-?\d+)(?:px)?)/;
-
+    
     this.slideConfig();
     this.init();
   }
@@ -39,6 +42,7 @@ export default class Slide {
     window.addEventListener(moveType, this.mouseMove);
 
     const oldTranslateX = this.slide.style.transform;
+    
     this.captureX = +oldTranslateX.match(this.regex).groups.number;
 
     this.transition(false);
@@ -63,6 +67,7 @@ export default class Slide {
     this.transition(true);
   }
 
+  // Ativa ou desativa a transição de transform do slide.
   transition(state) {
     this.slide.style.transition = state ? 'transform .3s' : '';
   }
@@ -96,6 +101,7 @@ export default class Slide {
     });
   }
 
+  // Guarda as informações do item atual, next e prev.
   slideIndexNav(index) {
     const last = this.slideArray.length - 1;
     this.index = {
@@ -111,29 +117,44 @@ export default class Slide {
 
     this.moveSlide(this.slideArray[index].position);
 
-    this.slideIndexNav(index);  
+    this.slideIndexNav(index);
+
+    this.slideArray.forEach(i => i.element.classList.remove('active'));
+
+    this.slideArray[index].element.classList.add('active');
   }
 
+  // Vai pro próximo item.
   activeNextSlide() {
     if(this.index.next !== undefined) {
       this.changeSlide(this.index.next);
     }
   }
 
+  // Vai pro item anterior.
   activePrevSlide() {
     if(this.index.prev !== undefined) {
       this.changeSlide(this.index.prev);
     }
   }
 
+  // Quando a tela mudar de tamanho.
+  onResize() {
+    setTimeout(() => {
+      this.slideConfig();
+      this.changeSlide(this.index.active);
+    },300);
+  }
+
+  // Configurações genéricas para que tudo funcione bem.
   init() {
-    this.slide.style.transform = 'translateX(0)';
-    
     this.wrapper.addEventListener('mousedown', this.mouseIn);
     this.wrapper.addEventListener('touchstart', this.mouseIn);
     
     this.changeSlide(0);
     this.transition(true);
+
+    window.addEventListener('resize', this.onResize);
 
     return this;
   }

@@ -17,15 +17,28 @@ ul.slide{
 .slide-wrapper{
   overflow: hidden;
   cursor: grab;
+  margin: 4rem 0;
 }
 .slide{
   display: flex;
-  gap: 8rem;
+  gap: 4rem;
   width: max-content;
   padding: 0;
+}
+.slide:hover{
+  will-change: transform;
 }
 .slide li{
   flex-shrink: 0;
   width: 80vw;
   max-width: 800px;
+  opacity: .8;
+  transform: scale(80%);
+  transition: .3s;
+  border-radius: 6px;
+  overflow: hidden;
+}
+.slide li.active{
+  opacity: 1;
+  transform: scale(100%);
 }
