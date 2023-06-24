@@ -17,7 +17,7 @@ ul.slide{
 .slide-wrapper{
   overflow: hidden;
   cursor: grab;
-  margin: 4rem 0;
+  padding: 4rem 0;
 }
 .slide{
   display: flex;
@@ -37,6 +37,7 @@ ul.slide{
   transition: .3s;
   border-radius: 6px;
   overflow: hidden;
+  box-shadow: 0 0 8px;
 }
 .slide li.active{
   opacity: 1;

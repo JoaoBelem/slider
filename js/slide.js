@@ -16,7 +16,7 @@ export default class Slide {
     this.init();
   }
 
-  // Muda a posição transform do slide
+  // Muda a posição transform do slide.
   moveSlide(num) {
     if (num === undefined) {
       this.slide.style.transform = `translateX(${this.captureX + (this.pointerX - this.oldClientX) * 1.6}px)`;
@@ -86,11 +86,11 @@ export default class Slide {
   mouseMove(e) {
     if (!this.wrapper.contains(e.target)) {
       this.mouseUp();
+      this.changeSlide(this.index.active);
+    } else {
+      this.pointerX = (e.type === 'mousemove') ? e.clientX : e.changedTouches[0].clientX;
+      this.moveSlide();
     }
-
-    this.pointerX = (e.type === 'mousemove') ? e.clientX : e.changedTouches[0].clientX;
-    
-    this.moveSlide();
   }
 
   // Dados do slide.
