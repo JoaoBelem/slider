@@ -13,21 +13,28 @@ export default class Slide {
     this.init();
   }
 
+  // Muda a posição transform do slide
+  moveSlide(num) {
+    if (num === undefined) {
+      this.slide.style.transform = `translateX(${this.captureX + (this.pointerX - this.oldClientX) * 1.6}px)`;
+    } else {
+      this.slide.style.transform = `translateX(${num}px)`;
+    }
+  }
+
   // Movimento do mouse/toque
   mouseMove(e) {
     if (!this.wrapper.contains(e.target)) {
       this.mouseUp();
     }
 
-    const pointerX = (e.type === 'mousemove') ? e.clientX : e.changedTouches[0].clientX;
-
-    this.slide.style.transform = `translateX(${this.captureX + (pointerX - this.oldClientX) * 1.6}px)`;
+    this.pointerX = (e.type === 'mousemove') ? e.clientX : e.changedTouches[0].clientX;
+    
+    this.moveSlide();
   }
 
   // Mouse/toque movido para fora ou finalizado.
   mouseUp(e) {
-    console.log('up');
-
     window.removeEventListener('mousemove', this.mouseMove);
     this.wrapper.removeEventListener('mouseup', this.mouseUp);
     
@@ -49,8 +56,6 @@ export default class Slide {
       moveType = 'touchmove'
     }
 
-    console.log('down');
-    console.log(this.oldClientX);
 
     window.addEventListener(moveType, this.mouseMove);
 
@@ -58,10 +63,42 @@ export default class Slide {
     this.captureX = +oldTranslateX.match(this.regex).groups.number;
   }
 
+  // Dados do slide.
+  slideConfig() {
+    this.slideArray = [...this.slide.children].map((element) => {
+      const position = -(element.offsetLeft - (window.innerWidth - element.clientWidth) / 2);
+      return { element, position }
+    });
+    console.log(this.slideArray);
+  }
+
+  slideIndexNav(index) {
+    const last = this.slideArray.length - 1;
+    this.index = {
+      prev: index === 0 ? undefined : index - 1,
+      active: index,
+      next: index === last ? undefined : index + 1,
+    }
+    console.log(this.index);
+  }
+
+  // Muda para o slide de acordo com o index indicado.
+  changeSlide(index) {
+    this.mouseUp(); //
+
+    this.moveSlide(this.slideArray[index].position);
+
+    this.slideIndexNav(index);  
+  }
+
   init() {
     this.slide.style.transform = 'translateX(0)';
-
+    
     this.wrapper.addEventListener('mousedown', this.mouseIn);
     this.wrapper.addEventListener('touchstart', this.mouseIn);
+    
+    this.slideConfig();
+
+    return this;
   }
 }
