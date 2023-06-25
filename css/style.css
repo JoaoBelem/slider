@@ -43,3 +43,12 @@ ul.slide{
   opacity: 1;
   transform: scale(100%);
 }
+.arrow-nav{
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+.arrow-nav button{
+  width: 2rem;
+  height: 2rem;
+}

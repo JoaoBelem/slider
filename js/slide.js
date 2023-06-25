@@ -9,6 +9,8 @@ export default class Slide {
     this.mouseUp = this.mouseUp.bind(this);
     this.mouseMove = this.mouseMove.bind(this);
     this.onResize = debounce(this.onResize.bind(this), 200);
+    this.activePrevSlide = this.activePrevSlide.bind(this);
+    this.activeNextSlide = this.activeNextSlide.bind(this);
     
     this.regex = /(?:(?<number>-?\d+)(?:px)?)/;
     
@@ -126,6 +128,7 @@ export default class Slide {
 
   // Vai pro próximo item.
   activeNextSlide() {
+    console.log(this);
     if(this.index.next !== undefined) {
       this.changeSlide(this.index.next);
     }
@@ -157,5 +160,19 @@ export default class Slide {
     window.addEventListener('resize', this.onResize);
 
     return this;
+  }
+}
+
+export class SlideNav extends Slide {
+  logar() {
+      console.log('aaa');
+  }
+
+  addArrow(prev, next) {
+    this.prevElementBtn = document.querySelector(prev);
+    this.nextElementBtn = document.querySelector(next);
+
+    this.prevElementBtn.addEventListener('click', this.activePrevSlide);
+    this.nextElementBtn.addEventListener('click', this.activeNextSlide);
   }
 }
