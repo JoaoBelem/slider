@@ -182,25 +182,38 @@ export class SlideNav extends Slide {
     this.nextElementBtn.addEventListener('click', this.activeNextSlide);
   }
 
-  addControl() {
-    this.control = document.createElement('ul');
-    this.control.setAttribute('data-control', 'slide');
-
-    this.slideArray.forEach((item, index) => {
-      const controlElement = document.createElement('li');
-      controlElement.innerHTML = `<a></a>`;
-      controlElement.setAttribute('data-index', index);
-      this.control.appendChild(controlElement);
-
-      controlElement.addEventListener('click', (e) => {
-        e.preventDefault();
-        this.changeSlide(+e.currentTarget.dataset.index);
+  addControl(custom) {
+    if(custom === undefined) {
+      this.control = document.createElement('ul');
+      this.control.setAttribute('data-control', 'slide');
+  
+      this.slideArray.forEach((item, index) => {
+        const controlElement = document.createElement('li');
+        controlElement.innerHTML = `<a></a>`;
+        controlElement.setAttribute('data-index', index);
+        this.control.appendChild(controlElement);
+  
+        controlElement.addEventListener('click', (e) => {
+          e.preventDefault();
+          this.changeSlide(+e.currentTarget.dataset.index);
+        });
       });
-    });
+  
+      this.wrapper.insertAdjacentElement('afterend', this.control);
+  
+      this.control.children[this.index.active].classList.add('active');
+    } else {
+      this.control = document.querySelector(custom);
 
-    this.wrapper.insertAdjacentElement('afterend', this.control);
 
-    this.control.children[this.index.active].classList.add('active');
+      Array.from(this.control.children).forEach((i, index) => {
+        i.setAttribute('data-index', index);
+        i.addEventListener('click', (e) => {
+          this.changeSlide(+e.currentTarget.dataset.index);
+        });
+      });
+    }
+
     window.addEventListener('changeSlideEvent', this.atualizaControl);
   }
 

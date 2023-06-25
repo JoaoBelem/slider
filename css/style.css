@@ -47,15 +47,19 @@ ul.slide{
   display: flex;
   justify-content: center;
   gap: 1rem;
-  margin: 2rem 0;
+  margin: 0 0 2rem 0;
 }
 .arrow-nav button{
-  width: 2rem;
-  height: 2rem;
+  width: 5rem;
+  height: 3rem;
   user-select: none;
   border: 3px solid #fb3;
   border-radius: 6px;
   cursor: pointer;
+  transition: background-color .2s;
+}
+.arrow-nav button:hover{
+  background-color: #ddd;
 }
 
 [data-control]{
@@ -70,14 +74,46 @@ ul.slide{
 }
 [data-control] li.active a{
   background-color: rgb(255, 44, 37);
-  transition: .2s;
 }
 [data-control] li a{
   display: block;
-  width: 2rem;
-  height: 2rem;
+  width: 1.25rem;
+  height: 1.25rem;
   background-color: #fb3;
   color: transparent;
   border-radius: 100%;
   cursor: pointer;
+  transition: background-color .25s;
+}
+
+.custom-controls{
+  display: flex;
+  justify-content: center;
+  margin: 2rem 0 0;
+  padding: 0;
+  gap: 1rem;
+  flex-wrap: wrap;
+  align-items: center;
+  user-select: none;
+}
+.custom-controls li{
+  display: block;
+  list-style: none;
+  cursor: pointer;
+  border-radius: 100%;
+  overflow: hidden;
+  transform: scale(.8);
+  transition: .3s;
+  box-shadow: 0 0 8px;
+  opacity: .8;
+}
+.custom-controls li img{
+  display: block;
+  width: 4rem;
+  height: 4rem;
+  -webkit-user-drag: none;
+}
+.custom-controls li.active{
+  transform: scale(1);
+  opacity: 1;
 }
