@@ -13,6 +13,8 @@ export default class Slide {
     this.activeNextSlide = this.activeNextSlide.bind(this);
     
     this.regex = /(?:(?<number>-?\d+)(?:px)?)/;
+
+    this.changeSlideEvent = new Event('changeSlideEvent');
     
     this.slideConfig();
     this.init();
@@ -21,7 +23,7 @@ export default class Slide {
   // Muda a posição transform do slide.
   moveSlide(num) {
     if (num === undefined) {
-      this.slide.style.transform = `translateX(${this.captureX + (this.pointerX - this.oldClientX) * 1.6}px)`;
+      this.slide.style.transform = `translateX(${this.captureX + (this.pointerX - this.oldClientX)}px)`;
     } else {
       this.slide.style.transform = `translateX(${num}px)`;
     }
@@ -124,11 +126,12 @@ export default class Slide {
     this.slideArray.forEach(i => i.element.classList.remove('active'));
 
     this.slideArray[index].element.classList.add('active');
+
+    window.dispatchEvent(this.changeSlideEvent);
   }
 
   // Vai pro próximo item.
   activeNextSlide() {
-    console.log(this);
     if(this.index.next !== undefined) {
       this.changeSlide(this.index.next);
     }
@@ -155,6 +158,7 @@ export default class Slide {
     this.wrapper.addEventListener('touchstart', this.mouseIn);
     
     this.changeSlide(0);
+
     this.transition(true);
 
     window.addEventListener('resize', this.onResize);
@@ -164,8 +168,10 @@ export default class Slide {
 }
 
 export class SlideNav extends Slide {
-  logar() {
-      console.log('aaa');
+  constructor(slide, wrapper) {
+    super(slide, wrapper);
+
+    this.bind();
   }
 
   addArrow(prev, next) {
@@ -174,5 +180,39 @@ export class SlideNav extends Slide {
 
     this.prevElementBtn.addEventListener('click', this.activePrevSlide);
     this.nextElementBtn.addEventListener('click', this.activeNextSlide);
+  }
+
+  addControl() {
+    this.control = document.createElement('ul');
+    this.control.setAttribute('data-control', 'slide');
+
+    this.slideArray.forEach((item, index) => {
+      const controlElement = document.createElement('li');
+      controlElement.innerHTML = `<a></a>`;
+      controlElement.setAttribute('data-index', index);
+      this.control.appendChild(controlElement);
+
+      controlElement.addEventListener('click', (e) => {
+        e.preventDefault();
+        this.changeSlide(+e.currentTarget.dataset.index);
+      });
+    });
+
+    this.wrapper.insertAdjacentElement('afterend', this.control);
+
+    this.control.children[this.index.active].classList.add('active');
+    window.addEventListener('changeSlideEvent', this.atualizaControl);
+  }
+
+  atualizaControl() {
+    Array.from(this.control.children).forEach((i) => {
+      i.classList.remove('active');
+    });
+
+    this.control.children[this.index.active].classList.add('active');
+  }
+
+  bind() {
+    this.atualizaControl = this.atualizaControl.bind(this);
   }
 }

@@ -17,7 +17,7 @@ ul.slide{
 .slide-wrapper{
   overflow: hidden;
   cursor: grab;
-  padding: 4rem 0;
+  padding: 2rem 0;
 }
 .slide{
   display: flex;
@@ -47,8 +47,37 @@ ul.slide{
   display: flex;
   justify-content: center;
   gap: 1rem;
+  margin: 2rem 0;
 }
 .arrow-nav button{
   width: 2rem;
   height: 2rem;
+  user-select: none;
+  border: 3px solid #fb3;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+[data-control]{
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin: 2rem 0;
+  padding: 0;
+}
+[data-control] li{
+  list-style: none;
+}
+[data-control] li.active a{
+  background-color: rgb(255, 44, 37);
+  transition: .2s;
+}
+[data-control] li a{
+  display: block;
+  width: 2rem;
+  height: 2rem;
+  background-color: #fb3;
+  color: transparent;
+  border-radius: 100%;
+  cursor: pointer;
 }
